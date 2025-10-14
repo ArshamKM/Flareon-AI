@@ -10,11 +10,10 @@ import geopandas as gpd
 from shapely.geometry import Point, shape
 from API.API_setup import provinces
 from tabulate import tabulate
-# change working directory to the script's directory
+from flareon_ai.llama_inference import infer, build_prompt
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def load_forecast_weather(forecast_date=None):
-    #Load and preprocess weather forecast data
     try:
         # load forecast data
         forecast = pd.read_csv('forecast_weather.csv')
@@ -49,12 +48,30 @@ def get_nearest_province(lat, lon, provinces):
     
     return nearest_province
 
+def create_simple_grid(resolution=100):
+    """
+    Create a simple rectangular grid over Spain without using shapefiles.
+    This acts as a fallback when Natural Earth data is not available.
+    """
+    import pandas as pd
+    import numpy as np
+    # Approximate bounding box for mainland Spain
+    min_lat, max_lat = 36.0, 44.0
+    min_lon, max_lon = -9.0, 4.0
+    lats = np.linspace(min_lat, max_lat, resolution)
+    lons = np.linspace(min_lon, max_lon, resolution)
+    lons_grid, lats_grid = np.meshgrid(lons, lats)
+    return pd.DataFrame({
+        "longitude": lons_grid.ravel(),
+        "latitude": lats_grid.ravel()
+    })
+
 def create_risk_grid(resolution=100):
     # create a grid of Spain for risk prediction, only including points within Spain's borders
     try:
         # update this path to where you extracted the Natural Earth data
-        natural_earth_path = r"C:\Users\danie\Desktop\PRJ4-2025-prj4-2025-d07\Model\natural_earth\ne_110m_admin_0_countries\ne_110m_admin_0_countries.shp"
         # load the Natural Earth data
+        natural_earth_path = "/Users/arshamkhoshfeiz/Desktop/Flareon-AI/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp"
         world = gpd.read_file(natural_earth_path)
         spain = world[world['ADMIN'] == 'Spain'].geometry.iloc[0]
         
