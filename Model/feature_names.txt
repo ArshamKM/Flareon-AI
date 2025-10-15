@@ -1,1 +1,0 @@
-latitude,longitude,year,month,day_of_year,day_of_week,is_weekend,season,lat_long_interaction,TEMP_AVG_mean,TEMP_AVG_max,TEMP_AVG_min,TEMP_AVG_std,PRCP_mean,PRCP_sum,PRCP_max,TEMP_RANGE_mean,TEMP_RANGE_max,TEMP_ANOMALY_mean,PRCP_ANOMALY_mean,weather_distance,weather_station_lat,weather_station_lon,days_since_last_fire,month_sin,month_cos,day_of_year_sin,day_of_year_cos
